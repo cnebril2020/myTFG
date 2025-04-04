@@ -35,7 +35,8 @@ Respuestas en [IAanswers.md](AIanswers.md) las marcadas con un tick verde.
 7. ❓ ¿Se podría decir que *kprobe* es una especie de debugger del kernel?
 
 [4 de abril 2025]
-8. ❓ Diferencias y similitudes entre *ftrace*, *kprobe* y *eBPF*
+8. ❓ ¿Diferencias y similitudes entre *ftrace*, *kprobe* y *eBPF*? [¹]
+9. ❓ ¿Cuál es la parte negativa de usar *ftrace* para hacer *hijacking* de las llamadas al sistema?  
 
 
 
@@ -82,15 +83,20 @@ Métodos más modernos:
 
 - Uso ***ftrace***
 
-    > Herramienta nativa para el trazado interno del kernel y ayudar a los desarrolladores para saber qué está pasando dentro del mismo. Su uso se pensó para usar *callbacks* al principio de las funciones del kernel y poder trazar el flujo de ejecución. Estos *callbacks* se pueden usar para hacer *hooking calls*.
+    - Herramienta nativa para el trazado interno del kernel y ayudar a los desarrolladores para saber qué está pasando dentro del mismo. Su uso se pensó para usar *callbacks* al principio de las funciones del kernel y poder trazar el flujo de ejecución. Estos *callbacks* se pueden usar para hacer *hooking calls*.
 
     - Un *callback* es una *función* que se pasa como parámetro a otra **función** y, cuando se complete una tarea en la **función** original, salta el *callback* como una especie de aviso para conocer el flujo de ejecución.
 
+
 - Uso ***kprobe***
 
-    > Es una especie de debugger del kernel. Puedes poner puntos de interrupción en la ejecución del kernel y conocer/modificar el valor de ciertos parámetros o, incluso, cambiar el flujo de ejecución del kernel. 
+    - Es una especie de debugger del kernel. Puedes poner puntos de interrupción en la ejecución del kernel y conocer/modificar el valor de ciertos parámetros o, incluso, cambiar el flujo de ejecución del kernel. 
 
-    > ***ketprobe*** es parecido a *kprobe* pero, específicamente diseñado para obtener el valor de funciones con **valor de retorno**. 
+    - ***ketprobe*** es parecido a *kprobe* pero, específicamente diseñado para obtener el valor de funciones con **valor de retorno**. 
+
+[¹]: Diferencias ***ftrace*** y ***kprobe***:
+
+    - [ftrace&kprobes_diferences.md](ftrace&kprobes_diferences.md)
 
 - Uso **eBPF** (Extended Berkeley Packet Filter): extended from original BPF (Berkeley Packet Filter)
 
