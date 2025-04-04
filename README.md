@@ -70,4 +70,16 @@ Creo que por hoy, con probar ```netstat.c``` en la máquina virtual, es suficien
 
 # 4 de abril 2025
 
+He aprendido la naturaleza y diferencias entre *ftrace* y *kprobe*. Está todo apuntado. 
 
+Aparte, ya he probado los tres ejemplos básicos del artículo: ```netstat.c```, ```hp_hook.c``` y ```hook.c```. Impresionante la verdad.
+
+Quería algo nuevo y he probado un primer intento de intentar obtener la información del kernel de forma directa: [```direct_syscall001.c```](/myTFG/src/test001/direct_syscall001.c). No me acuerdo de casi nada de C, es increíble. Va a ser una buena oportunidad de volver a cojer soltura.
+
+Obviamente, no ha funcionado —no solo por ser mi primer intento—, si no por intentar conseguir la información del archivo ```/proc/net/tcp``` que es de donde sacará la propia información el comando ```netstat``` y ```lsof```, casi seguro. Aquí me quedan algunas tareas para mañana o pasado:
+
+1. Obtener explicación por qué no funciona mi primer intento
+2. Nuevas ideas de obtener las llamadas al kernel de forma directa
+3. Continuar con la comprensión del artículo con **eBPF (extended Berkeley Packet Filter)**
+
+# 5 de abril
