@@ -38,7 +38,8 @@ Respuestas en [IAanswers.md](AIanswers.md) las marcadas con un tick verde.
 8. ❓ ¿Diferencias y similitudes entre *ftrace*, *kprobe* y *eBPF*? [¹]
 9. ❓ ¿Cuál es la parte negativa de usar *ftrace* para hacer *hijacking* de las llamadas al sistema?
 
-
+[6 de abril]
+10. ❓ ¿Cuándo nos enseñó Enrique a ocultar archivos de directorios, qué usaba? ¿*ftrace*, *kprobes*, *eBPF*?
 
 ## 1. What is a rootkit?
 

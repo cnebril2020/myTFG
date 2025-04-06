@@ -8,11 +8,11 @@ Devolpment for a tool capable of detenting rootkits making direct systemcalls to
 
 Empieza mi aventura con el TFG. He hablado con Enrique en el día de hoy sobre este nuevo proyecto. La idea es presentarlo el año que viene sobre estas fechas, antes de que acabe el curso e idealmente antes de mayo-junio.
 
-El primer paso es tener claro en qué consiste el proyecto (escuchar audio tutoría). 
+1. El primer paso es tener claro en qué consiste el proyecto (escuchar audio tutoría). 
 
-El segundo leerme "The Art of Linux Kernel Rootkit" de tmp.0ut
+2. El segundo leerme "The Art of Linux Kernel Rootkit" de tmp.0ut
 
-El tercero implementar el MVP que me ha descrito en el día de hoy: hacer la llamada al sistema de 'ls' a pelo y comparar con lo que me da el area de usuario.
+3. El tercero implementar el MVP que me ha descrito en el día de hoy: hacer la llamada al sistema de 'ls' a pelo y comparar con lo que me da el area de usuario.
 
 Varias preguntas que me surgen antes de empezar
 
@@ -83,3 +83,17 @@ Obviamente, no ha funcionado —no solo por ser mi primer intento—, si no por 
 3. Continuar con la comprensión del artículo con **eBPF (extended Berkeley Packet Filter)**
 
 # 5 de abril
+
+Los sábados, por lo general (y las circunstancias), descansaré
+
+# 6 de abril
+
+Hoy, bien de rápido. Me he leído en qué consiste eBPF y me ha quedado claro que es una herramienta muy potente y versátil. Combinándola con *kprobes* o *ftrace* se pueden hacer cosas muy chulas. 
+
+Cosas pendientes a desarrollar entre mañana y pasado:
+
+1. Acabar artículo **tmp0out.sh**
+2. Escuchar audio tutoría
+3. Implementar ya el MVP
+4. Preparar preguntas Enrique (selección)
+
