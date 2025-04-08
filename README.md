@@ -88,7 +88,7 @@ Los sábados, por lo general (y las circunstancias), descansaré
 
 # 6 de abril
 
-Hoy, bien de rápido. Me he leído en qué consiste eBPF y me ha quedado claro que es una herramienta muy potente y versátil. Combinándola con *kprobes* o *ftrace* se pueden hacer cosas muy chulas. 
+Hoy, bien de rápido. Me he leído en qué consiste ***eBPF*** y me ha quedado claro que es una herramienta muy potente y versátil (pero no mucho más). Combinándola con *kprobes* o *ftrace* se pueden hacer cosas muy chulas. 
 
 Cosas pendientes a desarrollar entre mañana y pasado:
 
@@ -96,4 +96,11 @@ Cosas pendientes a desarrollar entre mañana y pasado:
 2. Escuchar audio tutoría
 3. Implementar ya el MVP
 4. Preparar preguntas Enrique (selección)
+
+# 8 de abril
+
+1. Dejo para casa probar el caso práctico de ***eBPF***.
+2. Probar en casa, también, el caso de cargar un módulo malicioso en el kernel y listar las funciones disponibles de ser filtradas o rastreadas desde *sysfs* (```/sys/kernel/tracing/available_filter_functions```).
+3. 
+
 

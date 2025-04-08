@@ -19,7 +19,8 @@ Apuntes sucios sobre el artículo "The Art of Linux Kernel Rootkit" de tmp.0ut.
 
 ## Preguntas Enrique/Claude [✅/❓]
 
-Respuestas en [IAanswers.md](AIanswers.md) las marcadas con un tick verde.
+✅ -> Respuestas en [IAanswers.md](AIanswers.md).
+❓ -> Posibles preguntas para Enrique (hacer selección). 
 
 [1 de abril 2025]
 1. ✅ ¿Un *rootkit* de *kernel land* tiene que ser necesariamente un módulo de kernel cargable (LKM)?
@@ -40,6 +41,12 @@ Respuestas en [IAanswers.md](AIanswers.md) las marcadas con un tick verde.
 
 [6 de abril]
 10. ❓ ¿Cuándo nos enseñó Enrique a ocultar archivos de directorios, qué usaba? ¿*ftrace*, *kprobes*, *eBPF*?
+
+[8 de abril]
+11. ❓ He entendido más o menos en qué consisten *ftrace* y *kprobe* pero, ***eBPF*** no lo acabo de entender muy bien.
+12. ❓ ¿En qué consiste *sysfs* y por qué es tan bueno para detectar *rootkits*?
+13. ❓ Si realmente *sysfs* refleja los módulos cargados en el kernel, ¿por qué no leer (al menos como primer filtro), directamente de este archivo?
+14. ❓ Si, una de las razones por la que *rkhunter* y *chkrootkit* son "malos" es porque tienen una base de datos 'estática' y los *rootkits* pueden cambiar su comportamiento y evadir estos mecanismos de detección, ¿qué diferencia habría con hacer una herramienta que verifique ciertos archivos del *sysfs*? Si se listan determinados *rootkits*, habríamos detectado un LKM malicioso.
 
 ## 1. What is a rootkit?
 
@@ -78,7 +85,7 @@ Después de ver cómo se pueden secuestrar llamadas al sistema añadiendo módul
 Métodos anticuados:
 
 - Secuestrar llamadas al sistema añadiendo módulos de kernel maliciosos
-- Virtual File System (VFS) hooking: manipular funciones 
+- Virtual File System (VFS) hooking: manipular funciones del sistema de archivos (que no se muestren todas las entradas de archivos en un ```ls```, por ejemplo) 
 
 Métodos más modernos:
 
@@ -101,6 +108,8 @@ Métodos más modernos:
 
 - Uso **eBPF** (Extended Berkeley Packet Filter): extended from original BPF (Berkeley Packet Filter)
 
+    - Herramienta muy potente y versátil. Preguntar a Enrique en qué consiste, mas o menos.
+
 ### Explicación más detallada de las técnicas de *hijacking* modernas
 
 | Característica             | ftrace                                                                                                  | kprobe / kretprobe                                                                                          | eBPF                                                                                                     |
@@ -113,6 +122,59 @@ Métodos más modernos:
 | **Nivel de Complejidad**   | Medio a alto, dependiendo de la función y del hook implementado.                                       | Medio; se requiere un buen entendimiento del funcionamiento interno del kernel y de la función a enganchar.   | Alto, especialmente en el desarrollo, compilación y depuración de programas eBPF.                        |
 | **Impacto en el Sistema**  | Potencial impacto en performance si se abusa de los hooks o si se implementan de forma ineficiente.       | Puede afectar la estabilidad del sistema si se engancha incorrectamente funciones críticas.                   | Diseñado para minimizar overhead, aunque un mal programado puede ocasionar problemas.                    |
 | **Posibilidad de Detección** | Las alteraciones en la infraestructura de trazado (por ejemplo, en las tablas de funciones) pueden ser detectadas. | La presencia de probes y sus registros en el sistema (por ejemplo, en logs o trazas) puede revelar su uso.     | Es más discreto y difícil de detectar sin herramientas especializadas, aunque no es completamente invisible. |
+ 
+## 3. LKM rootkit detection
 
-## 
+Entramos en el área de interés de este TFG. Intentar detectar, o incluso mitigar, el *rootkit*.
+
+> Detecting an LKM rootkit is very difficult, and mitigation is even more complex. —*Matheuz*—
+
+Herramientas antiguas y obsoletas:
+
+1. *rkhunter*: es *'signature-based'*, es decir, se basa en comparar patrones y códigos maliciosos de otros *rootkits* conocidos y, en base a eso, detecta amenazas. El panorama actual ha evolucionado mucho y las técnicas de ocultación de los *rootkits* cambia de forma muy dinámica, no se puede depender de una base de datos estática.
+2. *chkrootkit*: usa el mismo método, igual de obsoleto.
+
+Si vamos al archivo ```/var/log/rkhunter.log```, podemos observar las firmas con las que intecta detectar los *rootkits*, sabiendo esto el método de *bypasear* la detección se vuelve trivial (le cambias el nombre a las funciones). Por ejemplo, en el caso del *rootkit* ```Diamorphine LKM```, busca estas funciones:
+
+```bash
+[11:26:53] Checking for Diamorphine LKM...
+[11:26:53]   Checking for kernel symbol 'diamorphine'        [ Not found ]
+[11:26:54]   Checking for kernel symbol 'module_hide'        [ Not found ]
+[11:26:54]   Checking for kernel symbol 'module_hidden'      [ Not found ]
+[11:26:54]   Checking for kernel symbol 'is_invisible'       [ Not found ]
+[11:26:54]   Checking for kernel symbol 'hacked_getdents'    [ Not found ]
+[11:26:54]   Checking for kernel symbol 'hacked_kill'        [ Not found ]
+[11:26:54] Diamorphine LKM                                   [ Not found ]
+```
+
+Herramientas MODERNAS para **detectar** *rootkits*:
+
+1. *sysfs*: sistema de archivos virtuales que expone la estructura interna del kernel, sus módulos, dispositivos, controladores y objetos relacionados. Más info en [sysfs.md](sysfs.md). 
+
+Aún así, algunos kernel como ```basilisk``` consiguen evadir ciertos "listados" de *sysfs* y, por ejemplo, si lo intentamos listar, no aparece (comportamiento de ocultación por parte del *rootkit*):
+
+```bash
+$> sudo insmod basilisk.ko
+$> lsmod | grep basilisk
+$> 
+# En cambio, sus funciones si aparecen listadas
+$> sudo cat /sys/kernel/tracing/available_filter_functions| grep basilisk
+  is_bad_path [basilisk]
+  crc32 [basilisk]
+  resolve_filename [basilisk]
+  read_hook [basilisk]
+  hook_openat [basilisk]
+  show_refcnt [basilisk]
+  init_this_kobj [basilisk]
+  fh_kprobe_lookup_name [basilisk]
+  fh_install_hook [basilisk]
+  fh_remove_hook [basilisk]
+  fh_install_hooks [basilisk]
+  fh_remove_hooks [basilisk]
+  sig_handle [basilisk]
+  hook_seq_read [basilisk]
+  set_root [basilisk]
+  h_lkm_protect [basilisk]
+  h_lkm_hide [basilisk]
+```
 
